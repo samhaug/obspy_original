@@ -32,104 +32,6 @@ from obspy.core.util.misc import flat_not_masked_contiguous, get_window_times
 
 class Stats(AttribDict):
     """
-    A container for additional header information of a ObsPy Trace object.
-
-    A ``Stats`` object may contain all header information (also known as meta
-    data) of a :class:`~obspy.core.trace.Trace` object. Those headers may be
-    accessed or modified either in the dictionary style or directly via a
-    corresponding attribute. There are various default attributes which are
-    required by every waveform import and export modules within ObsPy such as
-    :mod:`obspy.io.mseed`.
-
-    :type header: dict or :class:`~obspy.core.trace.Stats`, optional
-    :param header: Dictionary containing meta information of a single
-        :class:`~obspy.core.trace.Trace` object. Possible keywords are
-        summarized in the following `Default Attributes`_ section.
-
-    .. rubric:: Basic Usage
-
-    >>> stats = Stats()
-    >>> stats.network = 'BW'
-    >>> print(stats['network'])
-    BW
-    >>> stats['station'] = 'MANZ'
-    >>> print(stats.station)
-    MANZ
-
-    .. rubric:: _`Default Attributes`
-
-    ``sampling_rate`` : float, optional
-        Sampling rate in hertz (default value is 1.0).
-    ``delta`` : float, optional
-        Sample distance in seconds (default value is 1.0).
-    ``calib`` : float, optional
-        Calibration factor (default value is 1.0).
-    ``npts`` : int, optional
-        Number of sample points (default value is 0, which implies that no data
-        is present).
-    ``network`` : string, optional
-        Network code (default is an empty string).
-    ``location`` : string, optional
-        Location code (default is an empty string).
-    ``station`` : string, optional
-        Station code (default is an empty string).
-    ``channel`` : string, optional
-        Channel code (default is an empty string).
-    ``starttime`` : :class:`~obspy.core.utcdatetime.UTCDateTime`, optional
-        Date and time of the first data sample given in UTC (default value is
-        "1970-01-01T00:00:00.0Z").
-    ``endtime`` : :class:`~obspy.core.utcdatetime.UTCDateTime`, optional
-        Date and time of the last data sample given in UTC
-        (default value is "1970-01-01T00:00:00.0Z").
-
-    .. rubric:: Notes
-
-    (1) The attributes ``sampling_rate`` and ``delta`` are linked to each
-        other. If one of the attributes is modified the other will be
-        recalculated.
-
-        >>> stats = Stats()
-        >>> stats.sampling_rate
-        1.0
-        >>> stats.delta = 0.005
-        >>> stats.sampling_rate
-        200.0
-
-    (2) The attributes ``starttime``, ``npts``, ``sampling_rate`` and ``delta``
-        are monitored and used to automatically calculate the ``endtime``.
-
-        >>> stats = Stats()
-        >>> stats.npts = 60
-        >>> stats.delta = 1.0
-        >>> stats.starttime = UTCDateTime(2009, 1, 1, 12, 0, 0)
-        >>> stats.endtime
-        UTCDateTime(2009, 1, 1, 12, 0, 59)
-        >>> stats.delta = 0.5
-        >>> stats.endtime
-        UTCDateTime(2009, 1, 1, 12, 0, 29, 500000)
-
-    (3) The attribute ``endtime`` is read only and can not be modified.
-
-        >>> stats = Stats()
-        >>> stats.endtime = UTCDateTime(2009, 1, 1, 12, 0, 0)
-        Traceback (most recent call last):
-        ...
-        AttributeError: Attribute "endtime" in Stats object is read only!
-        >>> stats['endtime'] = UTCDateTime(2009, 1, 1, 12, 0, 0)
-        Traceback (most recent call last):
-        ...
-        AttributeError: Attribute "endtime" in Stats object is read only!
-
-    (4)
-        The attribute ``npts`` will be automatically updated from the
-        :class:`~obspy.core.trace.Trace` object.
-
-        >>> trace = Trace()
-        >>> trace.stats.npts
-        0
-        >>> trace.data = np.array([1, 2, 3, 4])
-        >>> trace.stats.npts
-        4
     """
     readonly = ['endtime']
     defaults = {
@@ -143,6 +45,12 @@ class Stats(AttribDict):
         'station': '',
         'location': '',
         'channel': '',
+        'gcarc': '',
+        'evdp': '',
+        'stla': '',
+        'stlo': '',
+        'evla': '',
+        'evlo': '',
     }
 
     def __init__(self, header={}):
